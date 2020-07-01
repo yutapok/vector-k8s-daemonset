@@ -11,16 +11,16 @@ data_dir = "/var/lib/vector"
   field = "message"
   drop_invalid = true
 
-[transforms.regexparse_k8slog_nginx]
+[transforms.regexparse_k8slog_something]
   type = "regex_parser"
   inputs = ["jsonparse_k8slog"]
   field = "log"
-  regex = "/^(?P<remote>[^ ]*) (?P<host>[^ ]*) (?P<user>[^ ]*) \[(?P<time>[^\]]*)\] "(?P<method>\S+)(?: +(?P<path>[^ ]*) +\S*)?" (?P<code>[^ ]*) (?P<size>[^ ]*)(?: "(?P<referer>[^\"]*)" "(?P<agent>[^\"]*)" "(?P<forwarder>[^\"]*)")?/"
+  regex = "^(?P<key>[^=]*)=(?P<value>[^=]*)$"
 
 
 [transforms.remove_fields_k8slog]
   type = "remove_fields"
-  inputs = ["regexparse_k8slog_nginx"]
+  inputs = ["regexparse_k8slog_something"]
   fields = ["file", "host", "source_type"]
 
 
@@ -32,6 +32,6 @@ data_dir = "/var/lib/vector"
   key_prefix   = "%Y/%m/%d/%H/"
   encoding     = "ndjson"
   compression  = "gzip"
-  [sinks.s3_transfer.batch]
+  [sinks.aws_s3_k8slog.batch]
     max_size   = 1000000 # 1mb uncompresse
     timeout_secs = 30
