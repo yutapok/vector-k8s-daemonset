@@ -5,8 +5,8 @@ metadata:
   name: aws-secrets
 type: Opaque
 data:
-  AWS_ACCESS_KEY_ID: #base64
-  AWS_SECRET_ACCESS_KEY: #base64
+  AWS_ACCESS_KEY_ID: Y2hpZ2F1eW9vbwo= #base64
+  AWS_SECRET_ACCESS_KEY: Y2hpZ2F1eW9vbwo= #base64
 
 
 ---
@@ -35,7 +35,7 @@ spec:
             secretKeyRef:
               key: AWS_SECRET_ACCESS_KEY
               name: aws-secrets
-      - image: vector-alpine:latest
+        image: vector-s3-alpine:latest
         imagePullPolicy: Never
         name: vector-s3-container
         ports:
@@ -46,7 +46,7 @@ spec:
         - mountPath: /var/log
           name: varlog
         - mountPath: /var/lib/vector/
-          name: data_dir_vector
+          name: data-dir-vector
       volumes:
       - hostPath:
           path: /var/log
@@ -56,5 +56,5 @@ spec:
         name: varlibdockercontainers
       - hostPath:
           path: /var/lib/vector/
-        name: data_dir_vector
+        name: data-dir-vector
 
