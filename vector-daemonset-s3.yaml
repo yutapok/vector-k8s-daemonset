@@ -5,8 +5,8 @@ metadata:
   name: aws-secrets
 type: Opaque
 data:
-  AWS_ACCESS_KEY_ID: Y2hpZ2F1eW9vbwo= #base64
-  AWS_SECRET_ACCESS_KEY: Y2hpZ2F1eW9vbwo= #base64
+  AWS_ACCESS_KEY_ID: Y2hpZ2F1eW9vbwo= #This is dummy string encoded by base64, you should replace value
+  AWS_SECRET_ACCESS_KEY: Y2hpZ2F1eW9vbwo= #This is dummy string encoded by base64, you should replace value
 
 
 ---
