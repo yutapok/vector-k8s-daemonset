@@ -1,0 +1,37 @@
+data_dir = "/var/lib/vector"
+
+[sources.file_k8slog]
+  type         = "file"
+  include      = ["/var/log/*.log"]
+  #ignore_older = 86400 # 1 day
+
+[transforms.jsonparse_k8slog]
+  type = "json_parser"
+  inputs = ["file_k8slog"]
+  field = "message"
+  drop_invalid = true
+
+[transforms.regexparse_k8slog_something]
+  type = "regex_parser"
+  inputs = ["jsonparse_k8slog"]
+  field = "log"
+  regex = "^(?P<key>[^=]*)=(?P<value>[^=]*)$"
+
+
+[transforms.remove_fields_k8slog]
+  type = "remove_fields"
+  inputs = ["regexparse_k8slog_something"]
+  fields = ["file", "host", "source_type"]
+
+
+[sinks.aws_s3_k8slog]
+  inputs       = ["remove_fields_k8slog"]
+  type         = "aws_s3"
+  region       = "ap-northeast-1"
+  bucket       = "k8s_log"
+  key_prefix   = "%Y/%m/%d/%H/"
+  encoding     = "ndjson"
+  compression  = "gzip"
+  [sinks.aws_s3_k8slog.batch]
+    max_size   = 1000000 # 1mb uncompresse
+    timeout_secs = 30
